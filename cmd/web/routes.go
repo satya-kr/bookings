@@ -1,9 +1,10 @@
 package main
 
 import (
-	"htmlweb/pkg/config"
-	"htmlweb/pkg/handlers"
 	"net/http"
+
+	"github.com/satya-kr/bookings/pkg/config"
+	"github.com/satya-kr/bookings/pkg/handlers"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

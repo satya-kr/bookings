@@ -3,11 +3,12 @@ package render
 import (
 	"bytes"
 	"fmt"
-	"htmlweb/pkg/config"
-	"htmlweb/pkg/models"
 	"net/http"
 	"path/filepath"
 	"text/template"
+
+	"github.com/satya-kr/bookings/pkg/config"
+	"github.com/satya-kr/bookings/pkg/models"
 )
 
 var functions = template.FuncMap{}

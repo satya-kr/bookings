@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"htmlweb/pkg/config"
-	"htmlweb/pkg/handlers"
-	"htmlweb/pkg/render"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/satya-kr/bookings/pkg/config"
+	"github.com/satya-kr/bookings/pkg/handlers"
+	"github.com/satya-kr/bookings/pkg/render"
 
 	"github.com/alexedwards/scs/v2"
 )

@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"fmt"
-	"htmlweb/pkg/config"
-	"htmlweb/pkg/models"
-	"htmlweb/pkg/render"
 	"net"
 	"net/http"
+
+	"github.com/satya-kr/bookings/pkg/config"
+	"github.com/satya-kr/bookings/pkg/models"
+	"github.com/satya-kr/bookings/pkg/render"
 )
 
 type Repository struct {
