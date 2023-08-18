@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"github.com/justinas/nosurf"
 	"github.com/satya-kr/bookings/pkg/config"
 	"github.com/satya-kr/bookings/pkg/models"
 )
@@ -22,12 +23,13 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
 // Template to render templates
-func Template(w http.ResponseWriter, tmpl string, td *models.TemplateData) error {
+func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
 
 	var err error
 
@@ -51,7 +53,7 @@ func Template(w http.ResponseWriter, tmpl string, td *models.TemplateData) error
 
 	buf := new(bytes.Buffer)
 
-	td = AddDefaultData(td)
+	td = AddDefaultData(td, r)
 
 	_ = t.Execute(buf, td)
 

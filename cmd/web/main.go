@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/satya-kr/bookings/internal/config"
+	"github.com/satya-kr/bookings/internal/handlers"
+	"github.com/satya-kr/bookings/internal/render"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/satya-kr/bookings/pkg/config"
-	"github.com/satya-kr/bookings/pkg/handlers"
-	"github.com/satya-kr/bookings/pkg/render"
 
 	"github.com/alexedwards/scs/v2"
 )
