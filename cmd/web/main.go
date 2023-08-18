@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"github.com/satya-kr/bookings/internal/config"
 	"github.com/satya-kr/bookings/internal/handlers"
+	"github.com/satya-kr/bookings/internal/models"
 	"github.com/satya-kr/bookings/internal/render"
 	"log"
 	"net/http"
@@ -18,6 +20,8 @@ var app config.AppConfig
 var session *scs.SessionManager
 
 func main() {
+	//put in the session
+	gob.Register(models.Reservation{})
 
 	//change this to true when we are in production
 	app.InProduction = false

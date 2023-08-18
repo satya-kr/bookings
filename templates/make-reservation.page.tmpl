@@ -1,0 +1,55 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container mt-5 mb-5">
+	<div class="row align-content-center">
+		<div class="col-lg-10">
+			<h1>Make Reservations</h1>
+		</div>
+		<div class="col-lg-2">
+			<a href="/search-availablity" class="btn btn-success btn-sm">Search Availability</a>
+		</div>
+		<div class="col-lg-6 mt-5">
+		    {{ $res := index .Data "reservation" }}
+			<form action="/make-reservation" method="post" novalidate class="needs-validationx">
+			    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
+				<div class="row">
+					<div class="col">
+						<div class="row" id="reservation-info-1">
+							<div class="col-md-6">
+								<input required value="{{ $res.FirstName }}" class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid {{end}}" type="text" name="first_name" placeholder="First Name">
+								{{with .Form.Errors.Get "first_name"}}
+								    <p class="text-error">{{.}}</p>
+                                {{end}}
+							</div>
+							<div class="col-md-6">
+								<input required value="{{ $res.LastName }}" class="form-control {{with .Form.Errors.Get "last_name"}} is-invalid {{end}}" type="text" name="last_name" placeholder="Last Name">
+								{{with .Form.Errors.Get "last_name"}}
+                                    <p class="text-error">{{.}}</p>
+                                {{end}}
+							</div>
+						</div>
+						<div class="row mt-3" id="reservation-info-2">
+							<div class="col-md-6">
+								<input required value="{{ $res.Email }}" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" type="email" name="email" placeholder="Email Address">
+								{{with .Form.Errors.Get "email"}}
+								    <p class="text-error">{{.}}</p>
+                                {{end}}
+							</div>
+							<div class="col-md-6">
+								<input required value="{{ $res.Phone }}" class="form-control {{with .Form.Errors.Get "phone"}} is-invalid {{end}}" type="text" name="phone" maxlength="10" placeholder="Phone">
+								{{with .Form.Errors.Get "phone"}}
+								    <p class="text-error">{{.}}</p>
+                                {{end}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="d-flex mt-3">
+					<button type="submit" class="btn btn-primary">Make Reservations</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{{end}} 

@@ -3,13 +3,13 @@ package render
 import (
 	"bytes"
 	"fmt"
+	"github.com/satya-kr/bookings/internal/config"
+	"github.com/satya-kr/bookings/internal/models"
 	"net/http"
 	"path/filepath"
 	"text/template"
 
 	"github.com/justinas/nosurf"
-	"github.com/satya-kr/bookings/pkg/config"
-	"github.com/satya-kr/bookings/pkg/models"
 )
 
 var functions = template.FuncMap{}

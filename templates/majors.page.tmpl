@@ -1,0 +1,52 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container mt-5 mb-5">
+	<div class="row align-content-center">
+		<div class="col-lg-12">
+			<h1 class="text-center">Majors Suite</h1>
+			<p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
+			<p class="text-center">Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero.</p>
+			<br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col text-center">
+			<a id="check-availability-button" href="#!" class="btn btn-success">Check Availability</a>
+		</div>
+	</div>
+</div>
+{{end}}
+
+
+{{define "js"}}
+<script>
+$(document).ready(function(){
+	var attention = Prompt();
+
+	$("#check-availability-button").click(function(){
+		let html = `
+		<form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+			<div class="form-row btn-block p-5">
+				<div class="col">
+					<div class="form-row" id="reservation-dates-modal">
+						<div class="col">
+							<input disabled required class="form-control" type="text" name="start" id="start" placeholder="Arrival">
+						</div>
+						<div class="col">
+							<input required class="form-control" type="text" name="end" id="end" placeholder="Departure">
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		`;
+
+		attention.custom({
+			msg: html,
+			title: "Choose Your Date"
+		});
+	});
+});
+</script>
+{{end}}

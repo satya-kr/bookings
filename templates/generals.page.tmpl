@@ -1,0 +1,91 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container mt-5 mb-5">
+	<div class="row align-content-center">
+		<div class="col-lg-12">
+			<h1 class="text-center">Generals Room</h1>
+			<p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
+			<p class="text-center">Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero.</p>
+			<br>
+		</div>
+		<div class="row">
+            <div class="col text-center">
+                <a id="check-availability-button" href="#!" class="btn btn-success">Check Availability</a>
+            </div>
+        </div>
+	</div>
+</div>
+{{end}} 
+
+
+{{define "js"}}
+<script>
+$(document).ready(function(){
+	var attention = Prompt();
+
+	$("#check-availability-button").click(function(){
+
+		
+		
+		let html = `
+		<form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+			<div class="row btn-block p-5">
+				<div class="col-12">
+					<div class="row" id="reservation-dates-modal" style="padding: 10px 0px 290px 0px !important">
+						<div class="col-6">
+							<input required class="form-control" type="text" name="start" id="start" placeholder="Arrival">
+						</div>
+						<div class="col-6">
+							<input required class="form-control" type="text" name="end" id="end" placeholder="Departure">
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		`;
+
+		attention.custom({
+			msg: html,
+			title: "Choose your dates",
+
+			willOpen: () => {
+				const elem = document.getElementById('reservation-dates-modal');
+				const rp = new DateRangePicker(elem, {
+					format: 'yyyy-mm-dd',
+					showOnFocus: true,
+					minDate: new Date(),
+				})
+			},
+
+			// didOpen: () => {
+			// 	document.getElementById('start').removeAttribute('disabled');
+			// 	document.getElementById('end').removeAttribute('disabled');
+			// },
+
+			callback: function(result) {
+				console.log("called");
+
+				let form = document.getElementById("check-availability-form");
+				let formData = new FormData(form);
+				formData.append("csrf_token", "{{.CSRFToken}}");
+				formData.append("room_id", "1");
+
+				fetch("/search-availability-ajax", {
+					method: "post",
+					body: formData,
+				})
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+					console.log(data.ok);
+					console.log(data.message);
+				})
+			}
+		});
+
+		
+	});
+});
+</script>
+{{end}}

@@ -3,11 +3,11 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/satya-kr/bookings/internal/config"
+	"github.com/satya-kr/bookings/internal/forms"
+	"github.com/satya-kr/bookings/internal/models"
+	"github.com/satya-kr/bookings/internal/render"
 	"net/http"
-
-	"github.com/satya-kr/bookings/pkg/config"
-	"github.com/satya-kr/bookings/pkg/models"
-	"github.com/satya-kr/bookings/pkg/render"
 )
 
 type Repository struct {
@@ -66,13 +66,77 @@ func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
-	render.Template(w, r, "make-reservation", &models.TemplateData{})
+
+	var emptyReservation models.Reservation
+	data := make(map[string]interface{})
+	data["reservation"] = emptyReservation
+
+	render.Template(w, r, "make-reservation", &models.TemplateData{
+		Form: forms.New(nil),
+		Data: data,
+	})
+}
+
+func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	//fmt.Printf("%v", r.PostForm)
+	reservation := models.Reservation{
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	form := forms.New(r.PostForm)
+
+	//form.Has("first_name", r)
+	//form.Has("last_name", r)
+	//form.Has("email", r)
+	//form.Has("phone", r)
+
+	form.Required("first_name", "last_name", "email", "phone")
+	form.MinLength("first_name", 5, r)
+	form.MinLength("last_name", 5, r)
+	form.MinLength("email", 5, r)
+	form.MinLength("phone", 10, r)
+	form.IsEmail("email")
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+
+		render.Template(w, r, "make-reservation", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+
+		return
+	}
+	m.App.Session.Put(r.Context(), "reservation", reservation)
+	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
+}
+
+func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) {
+	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		fmt.Println("Faild to get item from session")
+		return
+	}
+	data := make(map[string]interface{})
+	data["reservation"] = reservation
+	render.Template(w, r, "reservation-summary", &models.TemplateData{
+		Data: data,
+	})
 }
 
 func (m *Repository) Availablity(w http.ResponseWriter, r *http.Request) {
 	render.Template(w, r, "search-availablity", &models.TemplateData{})
 }
-
 func (m *Repository) PostAvailablity(w http.ResponseWriter, r *http.Request) {
 
 	start := r.Form.Get("start")
