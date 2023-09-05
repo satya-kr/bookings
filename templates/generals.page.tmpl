@@ -9,12 +9,12 @@
 			<p class="text-center">Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero.</p>
 			<br>
 		</div>
-		<div class="row">
-            <div class="col text-center">
-                <a id="check-availability-button" href="#!" class="btn btn-success">Check Availability</a>
-            </div>
-        </div>
 	</div>
+    <div class="row">
+        <div class="col text-center">
+            <a id="check-availability-button" href="#!" class="btn btn-success">Check Availability</a>
+        </div>
+    </div>
 </div>
 {{end}} 
 
@@ -77,9 +77,26 @@ $(document).ready(function(){
 				})
 				.then(response => response.json())
 				.then(data => {
-					console.log(data);
-					console.log(data.ok);
-					console.log(data.message);
+					//console.log(data);
+					//console.log(data.ok);
+					//console.log(data.message);
+					if (data.ok) {
+					    console.log(data.message)
+					    attention.custom({
+					        icon : "success",
+					        msg: `<p>${data.message}</p>
+					                <p>
+					                    <a href="/book-room?id=${data.room_id}&s=${data.start_date}&e=${data.end_date}" class="btn btn-primary">Book Now</a>
+					                </p>
+					              `,
+					        showConfirmButton: false,
+					    })
+					} else {
+					    console.log("Sorry, Room not available!")
+					    attention.error({
+					        msg: "Sorry, Room not available!"
+					    })
+					}
 				})
 			}
 		});

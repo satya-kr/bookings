@@ -3,7 +3,7 @@
 {{define "content"}}
 <div class="container mt-5 mb-5">
 	<div class="row justify-content-center">
-		<div class="col-lg-12">
+		<!-- <div class="col-lg-12">
 			<h1 class="text-center">Reservations</h1>
 			<p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.
 			Phasellus ullamcorper <br>ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero.</p>
@@ -11,11 +11,11 @@
 				<a href="/make-reservation" class="btn btn-success">Make Reservations</a>
 			</div>
 			<br>
-		</div>
+		</div> -->
 		
 		<div class="col-lg-6 mt-5">
 			<center>
-				<h3>Search Avaiablity</h3>
+				<h3>Search Availability</h3>
 				<form action="/search-availability" method="post" novalidate class="needs-validation">
 					<input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
 					<div class="row">
@@ -36,8 +36,6 @@
 						<button type="submit" class="btn btn-primary">Search Availability</button>
 					</div>
 				</form>
-				<br>
-				<button class="btn btn-primary test">Check</button>
 			</center>
 		</div>
 	</div>
@@ -48,7 +46,8 @@
 <script>
 const elem = document.getElementById("reservation-dates-modal");
 const rangepicker = new DateRangePicker(elem, {
-	format: "yyyy-mm-dd"
+	format: "yyyy-mm-dd",
+	minDate: new Date()
 }); 
 </script>
 {{end}}

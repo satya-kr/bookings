@@ -25,15 +25,16 @@ $(document).ready(function(){
 	var attention = Prompt();
 
 	$("#check-availability-button").click(function(){
+
 		let html = `
 		<form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
-			<div class="form-row btn-block p-5">
-				<div class="col">
-					<div class="form-row" id="reservation-dates-modal">
-						<div class="col">
-							<input disabled required class="form-control" type="text" name="start" id="start" placeholder="Arrival">
+			<div class="row btn-block p-5">
+				<div class="col-12">
+					<div class="row" id="reservation-dates-modal" style="padding: 10px 0px 290px 0px !important">
+						<div class="col-6">
+							<input required class="form-control" type="text" name="start" id="start" placeholder="Arrival">
 						</div>
-						<div class="col">
+						<div class="col-6">
 							<input required class="form-control" type="text" name="end" id="end" placeholder="Departure">
 						</div>
 					</div>
@@ -44,8 +45,61 @@ $(document).ready(function(){
 
 		attention.custom({
 			msg: html,
-			title: "Choose Your Date"
+			title: "Choose your dates",
+
+			willOpen: () => {
+				const elem = document.getElementById('reservation-dates-modal');
+				const rp = new DateRangePicker(elem, {
+					format: 'yyyy-mm-dd',
+					showOnFocus: true,
+					minDate: new Date(),
+				})
+			},
+
+			// didOpen: () => {
+			// 	document.getElementById('start').removeAttribute('disabled');
+			// 	document.getElementById('end').removeAttribute('disabled');
+			// },
+
+			callback: function(result) {
+				console.log("called");
+
+				let form = document.getElementById("check-availability-form");
+				let formData = new FormData(form);
+				formData.append("csrf_token", "{{.CSRFToken}}");
+				formData.append("room_id", "4");
+
+				fetch("/search-availability-ajax", {
+					method: "post",
+					body: formData,
+				})
+				.then(response => response.json())
+				.then(data => {
+					//console.log(data);
+					//console.log(data.ok);
+					//console.log(data.message);
+					if (data.ok) {
+					    console.log(data.message)
+					    attention.custom({
+					        icon : "success",
+					        msg: `<p>${data.message}</p>
+					                <p>
+					                    <a href="/book-room?id=${data.room_id}&s=${data.start_date}&e=${data.end_date}" class="btn btn-primary">Book Now</a>
+					                </p>
+					              `,
+					        showConfirmButton: false,
+					    })
+					} else {
+					    console.log("Sorry, Room not available!")
+					    attention.error({
+					        msg: "Sorry, Room not available!"
+					    })
+					}
+				})
+			}
 		});
+
+
 	});
 });
 </script>

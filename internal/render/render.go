@@ -8,23 +8,38 @@ import (
 	"net/http"
 	"path/filepath"
 	"text/template"
+	"time"
 
 	"github.com/justinas/nosurf"
 )
 
-var functions = template.FuncMap{}
+var functions = template.FuncMap{
+	"HumanDate": HumanDate,
+}
 
 var app *config.AppConfig
 
-// var pathToTemplate string
+var pathToTemplate, _ = filepath.Abs("../../templates")
 
-// NewTemplates sets the config for the template package
-func NewTemplates(a *config.AppConfig) {
+// NewRenderer NewTemplates sets the config for the template package
+func NewRenderer(a *config.AppConfig) {
 	app = a
 }
 
+func HumanDate(t time.Time) string {
+	return t.Format("2006-01-02")
+}
+
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.FlashMsg = app.Session.PopString(r.Context(), "flash")
+	td.ErrorMsg = app.Session.PopString(r.Context(), "error")
+	td.WarningMsg = app.Session.PopString(r.Context(), "warning")
 	td.CSRFToken = nosurf.Token(r)
+
+	if app.Session.Exists(r.Context(), "user_id") {
+		td.IsAuth = 1
+	}
+
 	return td
 }
 
@@ -66,17 +81,17 @@ func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.Te
 	return nil
 }
 
-// collect all templates then merge them with layout
+// GetTemplatesCache collect all templates then merge them with layout
 func GetTemplatesCache() (map[string]*template.Template, error) {
 
 	//get the Template Cache from app congig
 
 	myCache := map[string]*template.Template{}
 
-	pathToTemplate, pathErr := filepath.Abs("../../templates")
-	if pathErr != nil {
-		return myCache, pathErr
-	}
+	//pathToTemplate, pathErr := filepath.Abs("../../templates")
+	//if pathErr != nil {
+	//	return myCache, pathErr
+	//}
 
 	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.tmpl", pathToTemplate))
 	// fmt.Println("\n\n Pasges", pages)

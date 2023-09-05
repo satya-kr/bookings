@@ -3,6 +3,7 @@
 package config
 
 import (
+	"github.com/satya-kr/bookings/internal/models"
 	"log"
 	"text/template"
 
@@ -13,7 +14,9 @@ import (
 type AppConfig struct {
 	UseCache      bool
 	TemplateCache map[string]*template.Template //pointer to template
+	ErrorLog      *log.Logger
 	InfoLog       *log.Logger
 	InProduction  bool
 	Session       *scs.SessionManager
+	MailChan      chan models.EmailData
 }

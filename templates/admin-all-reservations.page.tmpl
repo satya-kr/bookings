@@ -1,0 +1,74 @@
+{{template "admin" .}}
+
+{{define "page-title"}}
+    All Reservation
+{{end}}
+
+{{ define "css" }}
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+    <style>
+        .datatable-input {
+            outline: none;
+            border: 1px solid #f7f7f7;
+            background: #f7f7f7;
+        }
+
+        .datatable-selector {
+            padding: 5px 5px;
+            margin: 0px 5px 0px 0px;
+            border: 1px solid #f7f7f7;
+            background: #f7f7f7;
+        }
+
+    </style>
+{{ end }}
+
+{{define "content"}}
+    <div class="col-md-12">
+        {{ $res := index .Data "reservations" }}
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover" id="all-res">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Room</th>
+                        <th>Arrival</th>
+                        <th>Departure</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{ range $res}}
+                        <tr>
+                            <td>{{.ID}}</td>
+                            <td>
+                                <a href="/admin/reservations/all/{{.ID}}">
+                                    <i class="ti-new-window"></i>&nbsp; {{.FirstName}} {{.LastName}}
+                                </a>
+                            </td>
+                            <td>{{.Room.RoomName}}</td>
+                            <td>{{HumanDate .StartDate}}</td>
+                            <td>{{HumanDate .EndDate}}</td>
+                        </tr>
+                    {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{{end}}
+
+{{ define "js" }}
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dataTable = new simpleDatatables.DataTable("#all-res", {
+                select: 3, sort: "desc",
+                searchable: true,
+                fixedHeight: true,
+                perPage: 10,
+            })
+        })
+    </script>
+{{ end }}
